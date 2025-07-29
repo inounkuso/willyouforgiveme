@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Will You Forgive Me?</title>
+  <style>
+    body {
+      background-color: #111;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding-top: 50px;
+      overflow: hidden;
+    }
+    h1 {
+      font-size: 3em;
+      margin-bottom: 20px;
+    }
+    #cat-img {
+      width: 300px;
+      height: auto;
+    }
+    .btn {
+      font-size: 1.5em;
+      padding: 10px 30px;
+      margin: 20px;
+      cursor: pointer;
+      border: none;
+      border-radius: 10px;
+      background-color: #444;
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+    .btn:hover {
+      background-color: #666;
+    }
+    #confetti {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 999;
+    }
+  </style>
+</head>
+<body>
+  <h1>Will you forgive me?</h1>
+  <img id="cat-img" src="/mnt/data/adff33ae-5020-4e7a-9549-55ab162ec6a5.png" alt="Sad Crying Cat">
+  <div>
+    <button class="btn" id="yes-btn">Yes</button>
+    <button class="btn" id="no-btn">No</button>
+  </div>
+  <canvas id="confetti"></canvas>
+
+  <script>
+    const noBtn = document.getElementById('no-btn');
+    const yesBtn = document.getElementById('yes-btn');
+    const catImg = document.getElementById('cat-img');
+    const confettiCanvas = document.getElementById('confetti');
+
+    noBtn.addEventListener('mouseenter', () => {
+      // Simulate mouse being forced to Yes
+      const yesRect = yesBtn.getBoundingClientRect();
+      window.scrollTo({
+        top: yesRect.top - window.innerHeight / 2 + yesRect.height / 2,
+        behavior: 'smooth'
+      });
+    });
+
+    noBtn.addEventListener('mouseover', () => {
+      noBtn.style.position = 'absolute';
+      noBtn.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+      noBtn.style.top = Math.random() * (window.innerHeight - 100) + 'px';
+    });
+
+    yesBtn.addEventListener('click', () => {
+      catImg.src = 'https://media.tenor.com/SQKQ9X6Ez4sAAAAC/dancing-cat.gif';
+      startConfetti();
+    });
+
+    // Simple confetti animation
+    const ctx = confettiCanvas.getContext('2d');
+    confettiCanvas.width = window.innerWidth;
+    confettiCanvas.height = window.innerHeight;
+
+    const confetti = [];
+    function startConfetti() {
+      for (let i = 0; i < 300; i++) {
+        confetti.push({
+          x: Math.random() * confettiCanvas.width,
+          y: Math.random() * confettiCanvas.height,
+          r: Math.random() * 6 + 2,
+          d: Math.random() * 10 + 2,
+          color: `hsl(${Math.random() * 360}, 100%, 50%)`
+        });
+      }
+      animateConfetti();
+    }
+
+    function animateConfetti() {
+      ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      confetti.forEach(c => {
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+        ctx.fillStyle = c.color;
+        ctx.fill();
+        c.y += c.d;
+        if (c.y > confettiCanvas.height) c.y = 0;
+      });
+      requestAnimationFrame(animateConfetti);
+    }
+
+    window.addEventListener('resize', () => {
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>
